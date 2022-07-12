@@ -11,3 +11,7 @@ class SternmanEngine(Engine, ABC):
 
     def needs_service(self) -> bool:
         return self.warning_light_is_on
+
+    def set_light(self, state: bool = False):
+        """Sets the state of the warning light"""
+        self.warning_light_is_on = state
