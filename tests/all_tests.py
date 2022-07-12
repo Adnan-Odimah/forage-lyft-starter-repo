@@ -4,6 +4,7 @@ from datetime import datetime
 from battery import NubbinBattery, SplinderBattery
 from car_factory import CarFactory
 from engine import CapuletEngine, SternmanEngine, WilloughbyEngine
+from tire import CarriganTires, OctoprimeTires
 
 
 class TestCarFactory(unittest.TestCase):
@@ -66,16 +67,16 @@ class TestCalliope(unittest.TestCase):
     """Tests different cases for the Calliope car"""
 
     def test_battery_should_be_serviced(self):
-        """Checks to see that it returns true when more than 2 years have passed (for car battery)"""
+        """Checks to see that it returns true when more than 3 years have passed (for car battery)"""
         today = datetime.now().date()
-        last_service_date = today.replace(year=today.year - 3)
+        last_service_date = today.replace(year=today.year - 4)
         car = CarFactory().create_calliope(last_service_date=last_service_date)
         self.assertTrue(car.needs_service())
 
     def test_battery_should_not_be_serviced(self):
-        """Checks to see that it false true when less than 2 years have passed (for car battery)"""
+        """Checks to see that it false when less than 3 years have passed (for car battery)"""
         today = datetime.now().date()
-        last_service_date = today.replace(year=today.year - 1)
+        last_service_date = today.replace(year=today.year - 2)
         car = CarFactory().create_calliope(last_service_date=last_service_date)
         self.assertFalse(car.needs_service())
 
@@ -100,16 +101,16 @@ class TestGlissade(unittest.TestCase):
     """Tests different cases for the Glissade car"""
 
     def test_battery_should_be_serviced(self):
-        """Checks to see that it returns true when more than 2 years have passed (for car battery)"""
+        """Checks to see that it returns true when more than 3 years have passed (for car battery)"""
         today = datetime.now().date()
-        last_service_date = today.replace(year=today.year - 3)
+        last_service_date = today.replace(year=today.year - 4)
         car = CarFactory().create_glissade(last_service_date=last_service_date)
         self.assertTrue(car.needs_service())
 
     def test_battery_should_not_be_serviced(self):
-        """Checks to see that it false true when less than 2 years have passed (for car battery)"""
+        """Checks to see that it false true when less than 3 years have passed (for car battery)"""
         today = datetime.now().date()
-        last_service_date = today.replace(year=today.year - 1)
+        last_service_date = today.replace(year=today.year - 2)
         car = CarFactory().create_glissade(last_service_date=last_service_date)
         self.assertFalse(car.needs_service())
 
@@ -134,16 +135,16 @@ class TestPalindrome(unittest.TestCase):
     """Tests different cases for the Palindrome car"""
 
     def test_battery_should_be_serviced(self):
-        """Checks to see that it returns true when more than 2 years have passed (for car battery)"""
+        """Checks to see that it returns true when more than 3 years have passed (for car battery)"""
         today = datetime.now().date()
-        last_service_date = today.replace(year=today.year - 3)
+        last_service_date = today.replace(year=today.year - 4)
         car = CarFactory().create_palindrome(last_service_date=last_service_date)
         self.assertTrue(car.needs_service())
 
     def test_battery_should_not_be_serviced(self):
-        """Checks to see that it false true when less than 2 years have passed (for car battery)"""
+        """Checks to see that it false true when less than 3 years have passed (for car battery)"""
         today = datetime.now().date()
-        last_service_date = today.replace(year=today.year - 1)
+        last_service_date = today.replace(year=today.year - 2)
         car = CarFactory().create_palindrome(last_service_date=last_service_date)
         self.assertFalse(car.needs_service())
 
@@ -228,6 +229,34 @@ class TestThovex(unittest.TestCase):
         self.assertFalse(car.needs_service())
 
 
+class TestTires(unittest.TestCase):
+    """Checks that tire service checks work properly"""
+
+    def test_carrigan_tires_should_be_serviced(self):
+        """Checks to see that it returns true when the tires need to be serviced (for Carrigan Tires)"""
+        tires = CarriganTires([0.9, 0.4, 0.5, 0.2])
+        car = CarFactory().create_calliope(tires=tires)
+        self.assertTrue(car.needs_service())
+
+    def test_carrigan_tires_should_not_be_serviced(self):
+        """Checks to see that it returns false when the tires do not need to be serviced (for Carrigan Tires)"""
+        tires = CarriganTires([0.7, 0.8, 0.8, 0.2])
+        car = CarFactory().create_calliope(tires=tires)
+        self.assertFalse(car.needs_service())
+
+    def test_octoprime_tires_should_be_serviced(self):
+        """Checks to see that it returns true when the tires need to be serviced (for Octoprime Tires)"""
+        tires = OctoprimeTires([0.9, 0.8, 0.8, 0.9])
+        car = CarFactory().create_calliope(tires=tires)
+        self.assertTrue(car.needs_service())
+
+    def test_octoprime_tires_should_not_be_serviced(self):
+        """Checks to see that it returns false when the tires do not need to be serviced (for Octoprime Tires)"""
+        tires = OctoprimeTires([0.8, 0.8, 0.8, 0.5])
+        car = CarFactory().create_calliope(tires=tires)
+        self.assertFalse(car.needs_service())
+
+
 class TestCarEdit(unittest.TestCase):
     """Tests that modifying the car works fine"""
 
@@ -235,13 +264,22 @@ class TestCarEdit(unittest.TestCase):
         """Checks if the engine change works"""
         car = CarFactory().create_calliope()
         car.set_engine(SternmanEngine(False))
-        self.assertTrue(isinstance(car.engine, SternmanEngine))
+        self.assertIsInstance(car.engine, SternmanEngine)
 
     def test_change_battery(self):
         """Checks if the battery change works"""
         car = CarFactory().create_calliope()
         car.set_battery(NubbinBattery(datetime.now().date()))
-        self.assertTrue(isinstance(car.battery, NubbinBattery))
+        self.assertIsInstance(car.battery, NubbinBattery)
+
+    def test_change_tires(self):
+        """Checks if the tire change works"""
+        car = (
+            CarFactory().create_calliope()
+        )  # Default tires are octoprime with [0, 0, 0, 0]
+        newTires = CarriganTires([0.5, 0.2, 0.1, 0.5])
+        car.set_tires(newTires)
+        self.assertIsInstance(car.tires, CarriganTires)
 
 
 if __name__ == "__main__":

@@ -8,4 +8,4 @@ class SplinderBattery(Battery, ABC):
     """Used to create an instance of the Splinder battery"""
 
     def needs_service(self, current_date: date = datetime.now().date()):
-        return self.last_service_date.year + 2 <= current_date.year
+        return self.last_service_date.year + 3 <= current_date.year

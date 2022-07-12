@@ -1,9 +1,10 @@
 from datetime import date, datetime
 
-from abstract_classes import Battery, Engine
+from abstract_classes import Battery, Engine, Tires
 from battery import NubbinBattery, SplinderBattery
 from car import Car
 from engine import CapuletEngine, SternmanEngine, WilloughbyEngine
+from tire import OctoprimeTires
 
 
 class CarFactory:
@@ -17,6 +18,7 @@ class CarFactory:
         self,
         last_service_date: date = datetime.now().date(),
         last_service_mileage: int = 0,
+        tires: Tires = OctoprimeTires(),
     ) -> Car:
         """Creates a Calliope car
 
@@ -28,12 +30,13 @@ class CarFactory:
         )
         battery: Battery = SplinderBattery(last_service_date=last_service_date)
 
-        return Car(engine=engine, battery=battery)
+        return Car(engine=engine, battery=battery, tires=tires)
 
     def create_glissade(
         self,
         last_service_mileage: int = 0,
         last_service_date: date = datetime.now().date(),
+        tires: Tires = OctoprimeTires(),
     ) -> Car:
         """Creates a Glissade Car
 
@@ -45,9 +48,13 @@ class CarFactory:
         )
         battery: Battery = SplinderBattery(last_service_date=last_service_date)
 
-        return Car(engine=engine, battery=battery)
+        return Car(engine=engine, battery=battery, tires=tires)
 
-    def create_palindrome(self, last_service_date: date = datetime.now().date()) -> Car:
+    def create_palindrome(
+        self,
+        last_service_date: date = datetime.now().date(),
+        tires: Tires = OctoprimeTires(),
+    ) -> Car:
         """Creates the Palindrome Car
 
         Returns:
@@ -56,12 +63,13 @@ class CarFactory:
         engine: Engine = SternmanEngine(warning_light_is_on=False)
         battery: Battery = SplinderBattery(last_service_date=last_service_date)
 
-        return Car(engine=engine, battery=battery)
+        return Car(engine=engine, battery=battery, tires=tires)
 
     def create_rorschach(
         self,
         last_service_mileage: int = 0,
         last_service_date: date = datetime.now().date(),
+        tires: Tires = OctoprimeTires(),
     ) -> Car:
         """Creates the Rorschach car
 
@@ -73,12 +81,13 @@ class CarFactory:
         )
         battery: Battery = NubbinBattery(last_service_date=last_service_date)
 
-        return Car(engine=engine, battery=battery)
+        return Car(engine=engine, battery=battery, tires=tires)
 
     def create_thovex(
         self,
         last_service_mileage: int = 0,
         last_service_date: date = datetime.now().date(),
+        tires: Tires = OctoprimeTires(),
     ) -> Car:
         """Creates the Thovex car
 
@@ -90,4 +99,4 @@ class CarFactory:
         )
         battery: Battery = NubbinBattery(last_service_date=last_service_date)
 
-        return Car(engine=engine, battery=battery)
+        return Car(engine=engine, battery=battery, tires=tires)
